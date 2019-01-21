@@ -39,7 +39,7 @@ namespace CityInfoCore.Services
 
         public IEnumerable<PointOfInterest> GetPointsOfInterestForCity(int cityId)
         {
-            return _context.PointsOfInterest.Where(c => c.Id == cityId).OrderBy(p => p.Name).ToList();
+            return _context.PointsOfInterest.Where(c => c.city.Id == cityId).OrderBy(p => p.Name).ToList();
         }
 
         public bool CityExists(int cityId)
