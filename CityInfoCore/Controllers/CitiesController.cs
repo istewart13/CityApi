@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using CityInfoCore.Entities;
 using CityInfoCore.Models;
 using CityInfoCore.Services;
@@ -27,17 +27,8 @@ namespace CityInfoCore.Controllers
         {
             var cityEntities = _cityInfoRepository.GetCities();
 
-            var results = new List<CityWithoutPointsOfInterestDto>();
-
-            foreach (var cityEntity in cityEntities)
-            {
-                results.Add(new CityWithoutPointsOfInterestDto
-                {
-                    Id = cityEntity.Id,
-                    Description = cityEntity.Description,
-                    Name = cityEntity.Name
-                });
-            }
+            var results = _mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>> (cityEntities);
+                
             return Ok(results);
         }
 
