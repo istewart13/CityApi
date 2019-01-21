@@ -41,5 +41,10 @@ namespace CityInfoCore.Services
         {
             return _context.PointsOfInterest.Where(c => c.Id == cityId).OrderBy(p => p.Name).ToList();
         }
+
+        public bool CityExists(int cityId)
+        {
+            return _context.Cities.Any(c => c.Id == cityId);
+        }
     }
 }
