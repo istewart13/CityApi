@@ -1,4 +1,5 @@
-﻿using CityInfoCore.Entities;
+using AutoMapper;
+using CityInfoCore.Entities;
 using CityInfoCore.Models;
 using CityInfoCore.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +14,12 @@ namespace CityInfoCore.Controllers
     public class CitiesController : Controller
     {
         private ICityInfoRepository _cityInfoRepository;
+        private readonly IMapper _mapper;
 
-        public CitiesController(ICityInfoRepository cityInfoRepository)
+        public CitiesController(ICityInfoRepository cityInfoRepository, IMapper mapper)
         {
             _cityInfoRepository = cityInfoRepository;
+            _mapper = mapper;
         }
 
         [HttpGet()]

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using CityInfoCore.Data;
 using CityInfoCore.Services;
 using Microsoft.AspNetCore.Builder;
@@ -36,6 +37,9 @@ namespace CityInfoCore
 #else
             services.AddTransient<IMailService, CloudMailService>();
 #endif
+
+            services.AddAutoMapper();
+
             services.AddDbContext<CityInfoContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 

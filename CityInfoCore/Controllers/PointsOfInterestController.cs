@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using CityInfoCore.Models;
 using CityInfoCore.Services;
 using Microsoft.AspNetCore.Http;
@@ -17,12 +18,14 @@ namespace CityInfoCore.Controllers
         private ILogger<PointsOfInterestController> _logger;
         private IMailService _mailService;
         private ICityInfoRepository _cityInfoRepository;
+        private readonly IMapper _mapper;
 
-        public PointsOfInterestController(ILogger<PointsOfInterestController> logger, IMailService mailService, ICityInfoRepository cityInfoRepository)
+        public PointsOfInterestController(ILogger<PointsOfInterestController> logger, IMailService mailService, ICityInfoRepository cityInfoRepository, IMapper mapper)
         {
             _logger = logger;
             _mailService = mailService;
             _cityInfoRepository = cityInfoRepository;
+            _mapper = mapper;
         }
 
         [HttpGet("{cityId}/pointsofinterest")]
