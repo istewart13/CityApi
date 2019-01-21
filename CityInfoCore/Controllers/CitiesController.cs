@@ -44,35 +44,15 @@ namespace CityInfoCore.Controllers
 
             if (includePointsOfInterest)
             {
-                var cityResult = new CityDto()
-                {
-                    Id = city.Id,
-                    Description = city.Description,
-                    Name = city.Name,
-                };
+                var cityResult = _mapper.Map<CityDto>(city);
 
-
-                foreach (var pointOfInterest in city.PointsOfInterest)
-                {
-                    cityResult.PointsOfInterest.Add(
-                        new PointOfInterestDto()
-                        {
-                            Id = pointOfInterest.Id,
-                            Description = pointOfInterest.Description,
-                            Name = pointOfInterest.Name,
-                        });
-                }
                 return Ok(cityResult);
             }
 
             else
             {
-                var cityResult = new CityWithoutPointsOfInterestDto()
-                {
-                    Id = city.Id,
-                    Description = city.Description,
-                    Name = city.Name,
-                };
+                var cityResult = _mapper.Map<CityWithoutPointsOfInterestDto>(city);
+
                 return Ok(cityResult);
             }
         }

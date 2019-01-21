@@ -12,6 +12,8 @@ namespace CityInfoCore.Models.Mapping
         public MappingProfile()
         {
             CreateMap<City, CityWithoutPointsOfInterestDto>();
+            CreateMap<City, CityDto>();
+            CreateMap<PointOfInterest, PointOfInterestDto>();
         }
     }
 }
