@@ -22,7 +22,7 @@ namespace CityInfoCore.Services
             return _context.Cities.OrderBy(c => c.Name).ToList();
         }
 
-        public City GetCity(int cityId, bool includePointsOfInterest)
+        public City GetCity(int cityId, bool includePointsOfInterest = false)
         {
             if (includePointsOfInterest)
             {
@@ -45,6 +45,17 @@ namespace CityInfoCore.Services
         public bool CityExists(int cityId)
         {
             return _context.Cities.Any(c => c.Id == cityId);
+        }
+
+        public void AddPointOfInterestForCity(int cityId, PointOfInterest pointOfInterest)
+        {
+            var city = GetCity(cityId);
+            city.PointsOfInterest.Add(pointOfInterest);
+        }
+
+        public bool Save()
+        {
+            return (_context.SaveChanges() >= 0);
         }
     }
 }
