@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using CityInfoCore.Entities;
 using CityInfoCore.Models;
 using CityInfoCore.Services;
 using Microsoft.AspNetCore.Http;
@@ -41,16 +42,7 @@ namespace CityInfoCore.Controllers
 
                 var pointsOfInterestForCity = _cityInfoRepository.GetPointsOfInterestForCity(cityId);
 
-                var pointsOfInterestForCityResults = new List<PointOfInterestDto>();
-                foreach (var pointOfInterest in pointsOfInterestForCity)
-                {
-                    pointsOfInterestForCityResults.Add(new PointOfInterestDto()
-                    {
-                        Id = pointOfInterest.Id,
-                        Name = pointOfInterest.Name,
-                        Description = pointOfInterest.Description,
-                    });
-                }
+                var pointsOfInterestForCityResults = _mapper.Map<IEnumerable<PointOfInterestDto>>(pointsOfInterestForCity);
 
                 return Ok(pointsOfInterestForCityResults);
             }
@@ -77,12 +69,7 @@ namespace CityInfoCore.Controllers
                 return NotFound();
             }
 
-            var pointOfInterestResult = new PointOfInterestDto()
-            {
-                Id = pointOfInterest.Id,
-                Name = pointOfInterest.Name,
-                Description = pointOfInterest.Description,
-            };
+            var pointOfInterestResult = _mapper.Map<PointOfInterestDto>(pointOfInterest);
 
             return Ok(pointOfInterestResult);
         }
@@ -105,28 +92,24 @@ namespace CityInfoCore.Controllers
                 return BadRequest(ModelState);
             }
 
-            var city = CitiesDataStore.Current.Cities.FirstOrDefault(c => c.Id == cityId);
-
-            if (city == null)
+            if (!_cityInfoRepository.CityExists(cityId))
             {
                 return NotFound();
             }
 
-            // demo purposes - to be improved
-            var maxPointOfInterestId = CitiesDataStore.Current.Cities.SelectMany(
-                c => c.PointsOfInterest).Max(p => p.Id);
+            var finalPointOfInterest = _mapper.Map<PointOfInterestForCreationDto, PointOfInterest>(pointOfInterest);
 
-            var finalPointOfInterest = new PointOfInterestDto()
+            _cityInfoRepository.AddPointOfInterestForCity(cityId, finalPointOfInterest);
+
+            if (!_cityInfoRepository.Save())
             {
-                Id = ++maxPointOfInterestId,
-                Name = pointOfInterest.Name,
-                Description = pointOfInterest.Description
-            };
+                return StatusCode(500, "A problem occurred whilst handling your request");
+            }
 
-            city.PointsOfInterest.Add(finalPointOfInterest);
+            var createdPointOfInterestToReturn = _mapper.Map<PointOfInterest, PointOfInterestDto>(finalPointOfInterest);
 
             return CreatedAtRoute("GetPointOfInterest", new
-            { cityId = cityId, pointOfInterestId = finalPointOfInterest.Id }, finalPointOfInterest);
+            { cityId = cityId, pointOfInterestId = finalPointOfInterest.Id }, createdPointOfInterestToReturn);
         }
 
         [HttpPut("{cityId}/pointsofinterest/{pointOfInterestId}")]
