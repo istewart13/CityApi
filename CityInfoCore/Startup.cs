@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using CityInfoCore.Data;
 using CityInfoCore.Services;
 using Microsoft.AspNetCore.Builder;
@@ -36,8 +37,13 @@ namespace CityInfoCore
 #else
             services.AddTransient<IMailService, CloudMailService>();
 #endif
+
+            services.AddAutoMapper();
+
             services.AddDbContext<CityInfoContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddScoped<ICityInfoRepository, CityInfoRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
